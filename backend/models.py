@@ -24,8 +24,13 @@ class Vehiculo(BaseModel):
 
 class Taller(BaseModel):
     nombre: str
-    ubicacion: str
-    especialidad: str
+    direccion: str
+    telefono: str
+    capacidad: int
+    latitud: float
+    longitud: float
+    radio: int
+    usuario_id: int
 
 
 class Incidente(BaseModel):
@@ -41,3 +46,24 @@ class AsignacionTaller(BaseModel):
 
 class ActualizarEstado(BaseModel):
     estado: str
+
+
+class TextoIA(BaseModel):
+    texto: str
+
+
+class AsignarTecnico(BaseModel):
+    tecnico_id: int
+
+class TecnicoRegistro(BaseModel):
+    nombre: str
+    telefono: str
+    especialidad: str
+    disponibilidad: bool
+    latitud: float
+    longitud: float
+    id_taller: int
+
+
+class DisponibilidadTecnico(BaseModel):
+    disponibilidad: bool

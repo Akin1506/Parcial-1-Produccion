@@ -100,7 +100,7 @@ document.getElementById("form-login").addEventListener("submit", async (e) => {
     if (response.ok) {
       guardarSesion(result.usuario);
       alert("Login correcto");
-      window.location.reload(); // 🔥 SOLUCIÓN CLAVE
+      window.location.reload();
     } else {
       loginMensaje.textContent = result.detail;
     }
@@ -125,75 +125,106 @@ document.getElementById("form-vehiculo").addEventListener("submit", async (e) =>
     anio: parseInt(document.getElementById("anio").value),
   };
 
-  const response = await fetch(`${API_URL}/vehiculos`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch(`${API_URL}/vehiculos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-  const result = await response.json();
-  mensajeGeneral.textContent = result.mensaje;
-  e.target.reset();
+    const result = await response.json();
+    mensajeGeneral.textContent = result.mensaje || result.detail;
+    e.target.reset();
+  } catch (error) {
+    console.error(error);
+    mensajeGeneral.textContent = "Error al registrar vehículo";
+  }
 });
 
 document.getElementById("btn-cargar-vehiculos").addEventListener("click", async () => {
-  const response = await fetch(`${API_URL}/vehiculos`);
-  const data = await response.json();
+  try {
+    const response = await fetch(`${API_URL}/vehiculos`);
+    const data = await response.json();
 
-  const lista = document.getElementById("lista-vehiculos");
-  lista.innerHTML = "";
+    const lista = document.getElementById("lista-vehiculos");
+    lista.innerHTML = "";
 
-  data.forEach((vehiculo) => {
-    lista.innerHTML += `
-      <div class="item">
-        <strong>ID:</strong> ${vehiculo.id}<br>
-        <strong>Placa:</strong> ${vehiculo.placa}<br>
-        <strong>Marca:</strong> ${vehiculo.marca}<br>
-        <strong>Modelo:</strong> ${vehiculo.modelo}<br>
-        <strong>Color:</strong> ${vehiculo.color}<br>
-        <strong>Año:</strong> ${vehiculo.anio}
-      </div>
-    `;
-  });
+    data.forEach((vehiculo) => {
+      lista.innerHTML += `
+        <div class="item">
+          <strong>Placa:</strong> ${vehiculo.placa}<br>
+          <strong>Marca:</strong> ${vehiculo.marca}<br>
+          <strong>Modelo:</strong> ${vehiculo.modelo}<br>
+          <strong>Año:</strong> ${vehiculo.anio}<br>
+          <strong>Color:</strong> ${vehiculo.color}<br>
+          <strong>Usuario:</strong> ${vehiculo.usuario}
+        </div>
+      `;
+    });
+  } catch (error) {
+    console.error(error);
+    mensajeGeneral.textContent = "Error al cargar vehículos";
+  }
 });
 
 document.getElementById("form-taller").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const usuario = obtenerSesion();
+  if (!usuario) return;
+
   const data = {
     nombre: document.getElementById("taller-nombre").value.trim(),
-    ubicacion: document.getElementById("taller-ubicacion").value.trim(),
-    especialidad: document.getElementById("taller-especialidad").value.trim(),
+    direccion: document.getElementById("taller-direccion").value.trim(),
+    telefono: document.getElementById("taller-telefono").value.trim(),
+    capacidad: parseInt(document.getElementById("taller-capacidad").value),
+    latitud: parseFloat(document.getElementById("taller-latitud").value),
+    longitud: parseFloat(document.getElementById("taller-longitud").value),
+    radio: parseInt(document.getElementById("taller-radio").value),
+    usuario_id: usuario.id,
   };
 
-  const response = await fetch(`${API_URL}/talleres`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch(`${API_URL}/talleres`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-  const result = await response.json();
-  mensajeGeneral.textContent = result.mensaje;
-  e.target.reset();
+    const result = await response.json();
+    mensajeGeneral.textContent = result.mensaje || result.detail;
+    e.target.reset();
+  } catch (error) {
+    console.error(error);
+    mensajeGeneral.textContent = "Error al registrar taller";
+  }
 });
 
 document.getElementById("btn-cargar-talleres").addEventListener("click", async () => {
-  const response = await fetch(`${API_URL}/talleres`);
-  const data = await response.json();
+  try {
+    const response = await fetch(`${API_URL}/talleres`);
+    const data = await response.json();
 
-  const lista = document.getElementById("lista-talleres");
-  lista.innerHTML = "";
+    const lista = document.getElementById("lista-talleres");
+    lista.innerHTML = "";
 
-  data.forEach((taller) => {
-    lista.innerHTML += `
-      <div class="item">
-        <strong>ID:</strong> ${taller.id}<br>
-        <strong>Nombre:</strong> ${taller.nombre}<br>
-        <strong>Ubicación:</strong> ${taller.ubicacion}<br>
-        <strong>Especialidad:</strong> ${taller.especialidad}
-      </div>
-    `;
-  });
+    data.forEach((taller) => {
+      lista.innerHTML += `
+        <div class="item">
+          <strong>ID:</strong> ${taller.id}<br>
+          <strong>Nombre:</strong> ${taller.nombre}<br>
+          <strong>Dirección:</strong> ${taller.direccion}<br>
+          <strong>Teléfono:</strong> ${taller.telefono}<br>
+          <strong>Capacidad:</strong> ${taller.capacidad}<br>
+          <strong>Radio:</strong> ${taller.radio}<br>
+          <strong>Usuario:</strong> ${taller.usuario}
+        </div>
+      `;
+    });
+  } catch (error) {
+    console.error(error);
+    mensajeGeneral.textContent = "Error al cargar talleres";
+  }
 });
 
 document.getElementById("form-incidente").addEventListener("submit", async (e) => {
@@ -206,34 +237,20 @@ document.getElementById("form-incidente").addEventListener("submit", async (e) =
     prioridad: document.getElementById("prioridad").value.trim(),
   };
 
-  const response = await fetch(`${API_URL}/incidentes`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch(`${API_URL}/incidentes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-  const result = await response.json();
-  mensajeGeneral.textContent = result.mensaje;
-  e.target.reset();
-});
-
-document.getElementById("form-asignar").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const id = document.getElementById("id-asignar").value;
-  const data = {
-    taller: document.getElementById("taller").value.trim(),
-  };
-
-  const response = await fetch(`${API_URL}/incidentes/${id}/asignar`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  const result = await response.json();
-  mensajeGeneral.textContent = result.mensaje;
-  e.target.reset();
+    const result = await response.json();
+    mensajeGeneral.textContent = result.mensaje || result.detail;
+    e.target.reset();
+  } catch (error) {
+    console.error(error);
+    mensajeGeneral.textContent = "Error al registrar incidente";
+  }
 });
 
 document.getElementById("form-estado").addEventListener("submit", async (e) => {
@@ -244,34 +261,48 @@ document.getElementById("form-estado").addEventListener("submit", async (e) => {
     estado: document.getElementById("nuevo-estado").value.trim(),
   };
 
-  const response = await fetch(`${API_URL}/incidentes/${id}/estado`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch(`${API_URL}/incidentes/${id}/estado`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-  const result = await response.json();
-  mensajeGeneral.textContent = result.mensaje;
-  e.target.reset();
+    const result = await response.json();
+    mensajeGeneral.textContent = result.mensaje || result.detail;
+    e.target.reset();
+  } catch (error) {
+    console.error(error);
+    mensajeGeneral.textContent = "Error al actualizar estado";
+  }
 });
 
 document.getElementById("btn-cargar-incidentes").addEventListener("click", async () => {
-  const response = await fetch(`${API_URL}/incidentes`);
-  const data = await response.json();
+  try {
+    const response = await fetch(`${API_URL}/incidentes`);
+    const data = await response.json();
 
-  const lista = document.getElementById("lista-incidentes");
-  lista.innerHTML = "";
+    const lista = document.getElementById("lista-incidentes");
+    lista.innerHTML = "";
 
-  data.forEach((incidente) => {
-    lista.innerHTML += `
-      <div class="item">
-        <strong>ID:</strong> ${incidente.id}<br>
-        <strong>Descripción:</strong> ${incidente.descripcion}<br>
-        <strong>Estado:</strong> ${incidente.estado}<br>
-        <strong>Taller:</strong> ${incidente.taller ?? "No asignado"}
-      </div>
-    `;
-  });
+    data.forEach((incidente) => {
+      lista.innerHTML += `
+        <div class="item">
+          <strong>ID:</strong> ${incidente.id}<br>
+          <strong>Fecha:</strong> ${incidente.fecha_hora}<br>
+          <strong>Descripción:</strong> ${incidente.descripcion}<br>
+          <strong>Categoría:</strong> ${incidente.categoria}<br>
+          <strong>Prioridad:</strong> ${incidente.prioridad}<br>
+          <strong>Estado:</strong> ${incidente.estado}<br>
+          <strong>Placa:</strong> ${incidente.placa_vehiculo}<br>
+          <strong>Usuario ID:</strong> ${incidente.usuario_id}
+        </div>
+      `;
+    });
+  } catch (error) {
+    console.error(error);
+    mensajeGeneral.textContent = "Error al cargar incidentes";
+  }
 });
 
 window.onload = () => {

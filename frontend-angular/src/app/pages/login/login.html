@@ -1,0 +1,52 @@
+<div class="login-page">
+  <div class="login-hero">
+    <h1>Plataforma de Emergencias Vehiculares</h1>
+    <p>
+      Solicita auxilio, registra incidentes y recibe asistencia técnica de forma rápida.
+    </p>
+
+    <div class="hero-badges">
+      <span>🚗 Auxilio vial</span>
+      <span>🛠️ Talleres</span>
+      <span>🤖 Asistente IA</span>
+    </div>
+  </div>
+
+  <div class="login-card">
+    <h2 *ngIf="!modoRegistro">Iniciar Sesión</h2>
+    <h2 *ngIf="modoRegistro">Crear Cuenta</h2>
+
+    <div *ngIf="!modoRegistro">
+      <input type="email" placeholder="Correo" [(ngModel)]="correo" />
+      <input type="password" placeholder="Contraseña" [(ngModel)]="password" />
+
+      <button class="main-btn" (click)="login()">Ingresar</button>
+
+      <p class="switch">
+        ¿No tienes cuenta?
+        <span (click)="cambiarModo()">Crear usuario</span>
+      </p>
+    </div>
+
+    <div *ngIf="modoRegistro">
+      <input type="text" placeholder="Nombre" [(ngModel)]="nombreRegistro" />
+      <input type="email" placeholder="Correo" [(ngModel)]="correoRegistro" />
+      <input type="password" placeholder="Contraseña" [(ngModel)]="passwordRegistro" />
+
+      <select [(ngModel)]="rolRegistro">
+        <option *ngFor="let rol of rolesDisponibles" [value]="rol">
+          {{ rol }}
+        </option>
+      </select>
+
+      <button class="main-btn" (click)="registrarUsuario()">Crear cuenta</button>
+
+      <p class="switch">
+        ¿Ya tienes cuenta?
+        <span (click)="cambiarModo()">Iniciar sesión</span>
+      </p>
+    </div>
+
+    <p class="mensaje" *ngIf="mensaje">{{ mensaje }}</p>
+  </div>
+</div>

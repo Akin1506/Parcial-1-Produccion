@@ -1,0 +1,343 @@
+<div class="layout">
+  <aside class="sidebar">
+    <h2>Menú</h2>
+
+    <button (click)="cambiarVista('perfil')">Perfil</button>
+    <button *ngIf="puedeVerVehiculos()" (click)="cambiarVista('vehiculos')">Vehículos</button>
+    <button *ngIf="puedeVerTalleres()" (click)="cambiarVista('talleres')">Talleres</button>
+    <button *ngIf="puedeVerTecnicos()" (click)="cambiarVista('tecnicos')">Técnicos</button>
+    <button (click)="cambiarVista('incidentes')">Incidentes</button>
+    <button *ngIf="puedeVerPanelTecnico()" (click)="cambiarVista('tecnico')">Panel Técnico</button>
+    <button (click)="cerrarSesion()">Cerrar sesión</button>
+  </aside>
+
+  <main class="contenido">
+    <h1>Plataforma de Emergencias Vehiculares</h1>
+
+    <p><strong>{{ usuario.nombre }}</strong> ({{ usuario.rol }})</p>
+    <p *ngIf="mensaje">{{ mensaje }}</p>
+
+    <!-- PERFIL -->
+    <section *ngIf="vistaActual === 'perfil'">
+      <h2>Perfil</h2>
+      <p>{{ usuario.nombre }}</p>
+      <p>{{ usuario.correo }}</p>
+    </section>
+
+    <!-- VEHÍCULOS -->
+   <section *ngIf="vistaActual === 'vehiculos'" class="card">
+  <h2>Vehículos</h2>
+
+  <div class="form-grid">
+    <input [(ngModel)]="placa" placeholder="Placa" />
+    <input [(ngModel)]="marca" placeholder="Marca" />
+    <input [(ngModel)]="modelo" placeholder="Modelo" />
+    <input [(ngModel)]="color" placeholder="Color" />
+    <input [(ngModel)]="anio" type="number" placeholder="Año" />
+  </div>
+
+  <div style="margin-top:10px;">
+    <button class="action-btn" (click)="registrarVehiculo()">Registrar</button>
+    <button class="action-btn secondary" (click)="cargarVehiculos()">Ver vehículos</button>
+  </div>
+
+  <!-- TABLA NUEVA -->
+  <table class="tabla-panel" *ngIf="vehiculos.length > 0">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Año</th>
+        <th>Color</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let v of vehiculos">
+        <td>{{ v.placa }}</td>
+        <td>{{ v.marca }}</td>
+        <td>{{ v.modelo }}</td>
+        <td>{{ v.anio }}</td>
+        <td>{{ v.color }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="vehiculos.length === 0">
+    No hay vehículos registrados.
+  </p>
+</section>
+
+    <!-- TALLERES -->
+    <section *ngIf="vistaActual === 'talleres'">
+      <h2>Talleres</h2>
+
+      <input [(ngModel)]="tallerNombre" placeholder="Nombre">
+      <input [(ngModel)]="tallerDireccion" placeholder="Dirección">
+      <input [(ngModel)]="tallerTelefono" placeholder="Teléfono">
+
+      <button (click)="registrarTaller()">Registrar</button>
+      <button (click)="cargarTalleres()">Ver</button>
+
+      <div *ngFor="let t of talleres">
+        {{ t.nombre }} - {{ t.direccion }}
+      </div>
+    </section>
+
+  <!-- TÉCNICOS -->
+<section *ngIf="vistaActual === 'tecnicos'" class="card">
+  <h2>Gestión de Técnicos</h2>
+
+  <div class="form-grid">
+    <input [(ngModel)]="tecnicoNombre" placeholder="Nombre del técnico" />
+    <input [(ngModel)]="tecnicoTelefono" placeholder="Teléfono" />
+
+    <select [(ngModel)]="tecnicoEspecialidad">
+      <option value="">Selecciona especialidad</option>
+      <option *ngFor="let esp of especialidadesDisponibles" [value]="esp">
+        {{ esp }}
+      </option>
+    </select>
+
+    <select [(ngModel)]="tecnicoTallerId">
+      <option [ngValue]="null">Selecciona taller</option>
+      <option *ngFor="let taller of talleres" [ngValue]="taller.id">
+        {{ taller.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <button class="action-btn" (click)="registrarTecnico()">Registrar técnico</button>
+  <button class="action-btn secondary" (click)="cargarTecnicos()">Ver técnicos</button>
+
+  <table class="tabla-panel" *ngIf="tecnicos.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Especialidad</th>
+        <th>Disponibilidad</th>
+        <th>Taller</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let tec of tecnicos">
+        <td>{{ tec.id }}</td>
+        <td>{{ tec.nombre }}</td>
+        <td>{{ tec.telefono }}</td>
+        <td>{{ tec.especialidad }}</td>
+        <td>{{ tec.disponibilidad ? 'Disponible' : 'No disponible' }}</td>
+        <td>{{ tec.taller }}</td>
+        <td>
+  <button 
+    class="action-btn danger small"
+    (click)="eliminarTecnico(tec.id)">
+    Eliminar
+  </button>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- PANEL TÉCNICO -->
+<section *ngIf="vistaActual === 'tecnico'" class="card">
+  <h2>Panel Técnico</h2>
+
+  <button class="action-btn secondary" (click)="cargarPanelTecnico()">
+    Actualizar
+  </button>
+
+  <table class="tabla-panel" *ngIf="incidentesTecnico.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Categoría</th>
+        <th>Prioridad</th>
+        <th>Estado</th>
+        <th>Técnico</th>
+        <th>Acciones</th>
+        <th>Ubicación</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let inc of incidentesTecnico">
+        <td>{{ inc.id }}</td>
+        <td>{{ inc.descripcion }}</td>
+        <td>{{ inc.categoria }}</td>
+        <td>{{ inc.prioridad }}</td>
+        <td>{{ inc.estado }}</td>
+
+        <td>{{ inc.tecnico_nombre || 'Sin asignar' }}</td>
+
+        <td>
+          <button
+            class="action-btn success small"
+            *ngIf="inc.estado?.toLowerCase().includes('pendiente')"
+            (click)="aceptarIncidente(inc.id)">
+            Aceptar
+          </button>
+
+          <button
+            class="action-btn danger small"
+            *ngIf="inc.estado?.toLowerCase().includes('pendiente')"
+            (click)="rechazarIncidente(inc.id)">
+            Rechazar
+          </button>
+
+          <button
+            class="action-btn small"
+            *ngIf="inc.estado?.toLowerCase().includes('aceptado')"
+            (click)="tomarIncidente(inc.id)">
+            En camino
+          </button>
+
+          <button
+            class="action-btn warning small"
+            *ngIf="inc.estado?.toLowerCase().includes('camino')"
+            (click)="iniciarAtencion(inc.id)">
+            Iniciar
+          </button>
+
+          <button
+            class="action-btn success small"
+            *ngIf="inc.estado?.toLowerCase().includes('proceso')"
+            (click)="finalizarIncidente(inc.id)">
+            Finalizar
+          </button>
+        </td>
+
+        <td>
+          <button class="action-btn secondary small" (click)="abrirMapa(inc.latitud, inc.longitud)">
+            Ver mapa
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="incidentesTecnico.length === 0">
+    No hay incidentes disponibles.
+  </p>
+</section>
+    <!-- INCIDENTES -->
+    <section *ngIf="vistaActual === 'incidentes'">
+      <h2>Incidentes</h2>
+
+      <!-- MÉTRICAS -->
+      <div *ngIf="esAdministrador()">
+        <h3>Métricas</h3>
+        {{ obtenerMetricas().total }} total |
+        {{ obtenerMetricas().pendientes }} pendientes |
+        {{ obtenerMetricas().proceso }} proceso |
+        {{ obtenerMetricas().finalizados }} finalizados
+      </div>
+
+      <input [(ngModel)]="descripcion" placeholder="Descripción">
+      <input [(ngModel)]="ubicacion" placeholder="Ubicación">*
+  
+      <select [(ngModel)]="categoria">
+        <option *ngFor="let c of categoriasDisponibles">{{ c }}</option>
+      </select>
+
+      <select [(ngModel)]="prioridad">
+        <option *ngFor="let p of prioridadesDisponibles">{{ p }}</option>
+      </select>
+
+      <button (click)="crearIncidente()">Crear</button>
+      <button (click)="cargarIncidentes()">Ver</button>
+      <button
+  type="button"
+  class="action-btn success"
+  *ngIf="esAdministrador()"
+  (click)="descargarReporteHTML()"
+>
+  Descargar reporte HTML
+</button>
+      <div class="card-incidente" *ngFor="let inc of incidentes">
+
+  <p class="titulo-incidente">
+    {{ inc.descripcion }} - {{ inc.estado }}
+  </p>
+
+  <p>
+    <strong>Técnico:</strong>
+    {{ inc.tecnico_nombre || 'Sin asignar' }}
+  </p>
+
+  <p class="detalle-incidente">
+    <strong>Incidente {{ inc.id }}:</strong>
+    {{ inc.descripcion }}.
+    <strong>Categoría:</strong> {{ inc.categoria }}.
+    <strong>Prioridad:</strong> {{ inc.prioridad }}.
+    <strong>Estado:</strong> {{ inc.estado }}.
+    <strong>Técnico:</strong> {{ inc.tecnico_nombre || 'Sin asignar' }}.
+    <strong>Vehículo:</strong> {{ inc.placa_vehiculo }}.
+  </p>
+
+  <!-- MANTENEMOS ESTO -->
+  <p class="resumen-box">
+    {{ generarResumenIncidente(inc) }}
+  </p>
+
+  <p class="alerta-box" *ngIf="incidenteIncompleto(inc)">
+    ⚠ {{ advertenciaIncidente(inc) }}
+  </p>
+
+  <button class="action-btn small" (click)="abrirMapa(inc.latitud, inc.longitud)">
+    Ver mapa
+  </button>
+
+    </div>
+    </section>
+
+  </main>
+  <div class="toast" *ngIf="toastMensaje" [ngClass]="toastTipo">
+  {{ toastMensaje }}
+</div>
+<!-- CHAT FLOTANTE -->
+<!-- BURBUJA CHAT -->
+<button class="chat-bubble" (click)="alternarChat()">
+  💬
+</button>
+
+<!-- CHAT FLOTANTE -->
+<div class="chat-flotante" *ngIf="chatAbierto">
+
+  <div class="chat-header">
+    <span>Asistente IA</span>
+    <button class="cerrar-chat" (click)="alternarChat()">×</button>
+  </div>
+
+  <div class="chat-body">
+    <p class="bot">Hola 👋 ¿Qué le pasa a tu vehículo?</p>
+
+    <p class="user" *ngIf="mensajeIAUsuario">
+      {{ mensajeIAUsuario }}
+    </p>
+
+    <p class="bot" *ngIf="respuestaIA">
+      {{ respuestaIA }}
+    </p>
+    <button 
+  class="crear-incidente-btn"
+  *ngIf="respuestaIA"
+  (click)="crearIncidenteDesdeIA()"
+>
+  Crear incidente con esta información
+</button>
+  </div>
+
+  <div class="chat-input">
+    <input [(ngModel)]="mensajeIA" placeholder="Describe el problema..." />
+    <button (click)="analizarIncidenteIA()">Enviar</button>
+  </div>
+
+</div>
+</div>

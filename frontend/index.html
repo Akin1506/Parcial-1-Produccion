@@ -25,8 +25,9 @@
         <input type="email" id="reg-correo" placeholder="Correo" required />
         <input type="password" id="reg-password" placeholder="Contraseña" required />
         <select id="reg-rol" required>
-          <option value="cliente">Cliente</option>
-          <option value="admin_taller">Administrador de Taller</option>
+          <option value="Cliente">Cliente</option>
+          <option value="Administrador">Administrador</option>
+          <option value="Taller">Taller</option>
         </select>
         <button type="submit">Registrarme</button>
       </form>
@@ -43,7 +44,7 @@
       <button onclick="mostrarVista('vista-vehiculos')">Vehículos</button>
       <button onclick="mostrarVista('vista-talleres')">Talleres</button>
       <button onclick="mostrarVista('vista-incidentes')">Incidentes</button>
-      <button onclick="mostrarVista('vista-estado')">Consultar Estado</button>
+      <button onclick="mostrarVista('vista-consulta-incidentes')">Consultar Incidentes</button>
       <button onclick="cerrarSesion()">Cerrar sesión</button>
     </aside>
 
@@ -81,8 +82,12 @@
           <h2>Registrar Taller</h2>
           <form id="form-taller">
             <input type="text" id="taller-nombre" placeholder="Nombre del taller" required />
-            <input type="text" id="taller-ubicacion" placeholder="Ubicación" required />
-            <input type="text" id="taller-especialidad" placeholder="Especialidad" required />
+            <input type="text" id="taller-direccion" placeholder="Dirección" required />
+            <input type="text" id="taller-telefono" placeholder="Teléfono" required />
+            <input type="number" id="taller-capacidad" placeholder="Capacidad de vehículos" required />
+            <input type="number" step="any" id="taller-latitud" placeholder="Latitud" required />
+            <input type="number" step="any" id="taller-longitud" placeholder="Longitud" required />
+            <input type="number" id="taller-radio" placeholder="Radio de cobertura" required />
             <button type="submit">Registrar taller</button>
           </form>
 
@@ -97,32 +102,23 @@
           <form id="form-incidente">
             <input type="text" id="descripcion" placeholder="Descripción" required />
             <input type="text" id="ubicacion" placeholder="Ubicación" required />
-            <input type="text" id="tipo" placeholder="Tipo de incidente" required />
-            <input type="text" id="prioridad" placeholder="Prioridad" required />
+            <input type="text" id="tipo" placeholder="Tipo (ej. Sistema electrico, Choque)" required />
+            <input type="text" id="prioridad" placeholder="Prioridad (ej. Alta, Media, Crítica)" required />
             <button type="submit">Registrar incidente</button>
           </form>
 
           <hr />
 
-          <h2>Asignar Taller</h2>
-          <form id="form-asignar">
-            <input type="number" id="id-asignar" placeholder="ID del incidente" required />
-            <input type="text" id="taller" placeholder="Nombre del taller" required />
-            <button type="submit">Asignar taller</button>
-          </form>
-
-          <hr />
-
-          <h2>Cambiar Estado</h2>
+          <h2>Actualizar Estado</h2>
           <form id="form-estado">
             <input type="number" id="id-estado" placeholder="ID del incidente" required />
-            <input type="text" id="nuevo-estado" placeholder="Nuevo estado" required />
+            <input type="text" id="nuevo-estado" placeholder="Nuevo estado (ej. En Camino, Finalizado)" required />
             <button type="submit">Actualizar estado</button>
           </form>
         </div>
       </section>
 
-      <section id="vista-estado" class="vista hidden">
+      <section id="vista-consulta-incidentes" class="vista hidden">
         <div class="card">
           <h2>Lista de Incidentes</h2>
           <button id="btn-cargar-incidentes">Cargar incidentes</button>
