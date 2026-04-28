@@ -38,7 +38,7 @@ export class LoginComponent {
       password: this.password
     };
 
-    this.http.post<any>('https://parcial-12d26.onrender.com//login', datos).subscribe({
+    this.http.post<any>('https://parcial-1-produccion.onrender.com/login', datos).subscribe({
       next: (res) => {
         localStorage.setItem('usuarioLogueado', JSON.stringify(res.usuario));
         this.router.navigate(['/dashboard']);
@@ -62,7 +62,7 @@ export class LoginComponent {
       return;
     }
 
-    this.http.post<any>('https://parcial-12d26.onrender.com//registro', datos).subscribe({
+    this.http.post<any>('https://parcial-1-produccion.onrender.com/registro', datos).subscribe({
       next: () => {
         this.mensaje = 'Usuario creado correctamente. Ahora inicia sesión.';
         this.modoRegistro = false;

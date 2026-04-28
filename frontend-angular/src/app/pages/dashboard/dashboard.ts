@@ -166,7 +166,7 @@ iaPrioridad = '';
   }
 
   cargarTalleres() {
-    this.http.get<any[]>('https://parcial-12d26.onrender.com//talleres').subscribe({
+    this.http.get<any[]>('https://parcial-1-produccion.onrender.com/talleres').subscribe({
       next: (data) => {
         this.talleres = data;
 
@@ -181,7 +181,7 @@ iaPrioridad = '';
   }
 
   cargarTecnicos() {
-    this.http.get<any[]>('https://parcial-12d26.onrender.com//tecnicos').subscribe({
+    this.http.get<any[]>('https://parcial-1-produccion.onrender.com/tecnicos').subscribe({
       next: (data) => {
         this.tecnicos = data;
       },
@@ -202,7 +202,7 @@ iaPrioridad = '';
       id_taller: this.tecnicoTallerId
     };
 
-    this.http.post('https://parcial-12d26.onrender.com//tecnicos', data).subscribe({
+    this.http.post('https://parcial-1-produccion.onrender.com/tecnicos', data).subscribe({
       next: () => {
         this.mensaje = 'Técnico registrado correctamente';
         this.tecnicoNombre = '';
@@ -220,7 +220,7 @@ iaPrioridad = '';
   }
 
   cambiarDisponibilidadTecnico(id: number, disponibilidad: boolean) {
-    this.http.put(`https://parcial-12d26.onrender.com//tecnicos/${id}/disponibilidad`, {
+    this.http.put(`https://parcial-1-produccion.onrender.com/tecnicos/${id}/disponibilidad`, {
       disponibilidad
     }).subscribe({
       next: () => {
@@ -234,7 +234,7 @@ iaPrioridad = '';
   }
 
   cargarVehiculos() {
-    this.http.get<any[]>('https://parcial-12d26.onrender.com//vehiculos').subscribe({
+    this.http.get<any[]>('https://parcial-1-produccion.onrender.com/vehiculos').subscribe({
       next: (data) => {
         this.vehiculos = this.esAdministrador()
           ? data
@@ -256,7 +256,7 @@ iaPrioridad = '';
       anio: this.anio
     };
 
-    this.http.post('https://parcial-12d26.onrender.com//vehiculos', data).subscribe({
+    this.http.post('https://parcial-1-produccion.onrender.com/vehiculos', data).subscribe({
       next: () => {
         this.mensaje = 'Vehículo registrado correctamente';
         this.placa = '';
@@ -284,7 +284,7 @@ iaPrioridad = '';
       usuario_id: this.usuario.id
     };
 
-    this.http.post('https://parcial-12d26.onrender.com//talleres', data).subscribe({
+    this.http.post('https://parcial-1-produccion.onrender.com/talleres', data).subscribe({
       next: () => {
         this.mensaje = 'Taller registrado correctamente';
         this.tallerNombre = '';
@@ -303,7 +303,7 @@ iaPrioridad = '';
   }
 
   cargarIncidentes() {
-    this.http.get<any[]>('https://parcial-12d26.onrender.com//incidentes').subscribe({
+    this.http.get<any[]>('https://parcial-1-produccion.onrender.com/incidentes').subscribe({
       next: (data) => {
         this.incidentes = this.esCliente()
           ? data.filter(i => Number(i.usuario_id) === Number(this.usuario.id))
@@ -316,7 +316,7 @@ iaPrioridad = '';
   }
 
   cargarPanelTecnico() {
-    this.http.get<any[]>('https://parcial-12d26.onrender.com//incidentes').subscribe({
+    this.http.get<any[]>('https://parcial-1-produccion.onrender.com/incidentes').subscribe({
       next: (data) => {
         this.incidentesTecnico = data.filter(i => {
           const estado = String(i.estado).toLowerCase();
@@ -337,7 +337,7 @@ iaPrioridad = '';
       prioridad: this.prioridad
     };
 
-    this.http.post('https://parcial-12d26.onrender.com//incidentes', data).subscribe({
+    this.http.post('https://parcial-1-produccion.onrender.com/incidentes', data).subscribe({
       next: (res: any) => {
         this.mensaje = res.notificacion
           ? `Incidente creado correctamente. ${res.notificacion}`
@@ -356,7 +356,7 @@ iaPrioridad = '';
   }
 
   aceptarIncidente(id: number) {
-    this.http.put(`https://parcial-12d26.onrender.com//incidentes/${id}/aceptar`, {}).subscribe({
+    this.http.put(`https://parcial-1-produccion.onrender.com/incidentes/${id}/aceptar`, {}).subscribe({
       next: () => {
         this.mensaje = 'Solicitud aceptada correctamente';
         this.cargarPanelTecnico();
@@ -365,7 +365,7 @@ iaPrioridad = '';
   }
 
   rechazarIncidente(id: number) {
-    this.http.put(`https://parcial-12d26.onrender.com//incidentes/${id}/rechazar`, {}).subscribe({
+    this.http.put(`https://parcial-1-produccion.onrender.com/incidentes/${id}/rechazar`, {}).subscribe({
       next: () => {
         this.mensaje = 'Solicitud rechazada correctamente';
         this.cargarPanelTecnico();
@@ -381,7 +381,7 @@ iaPrioridad = '';
       return;
     }
 
-    this.http.put(`https://parcial-12d26.onrender.com//incidentes/${idIncidente}/asignar-tecnico`, {
+    this.http.put(`https://parcial-1-produccion.onrender.com/incidentes/${idIncidente}/asignar-tecnico`, {
       tecnico_id: Number(tecnicoId)
     }).subscribe({
       next: () => {
@@ -396,7 +396,7 @@ iaPrioridad = '';
   }
 
   iniciarAtencion(idIncidente: number) {
-    this.http.put(`https://parcial-12d26.onrender.com//incidentes/${idIncidente}/iniciar-atencion`, {}).subscribe({
+    this.http.put(`https://parcial-1-produccion.onrender.com/incidentes/${idIncidente}/iniciar-atencion`, {}).subscribe({
       next: () => {
         this.mensaje = 'Atención técnica iniciada correctamente';
         this.cargarPanelTecnico();
@@ -424,7 +424,7 @@ iaPrioridad = '';
   }
 
   cambiarEstadoIncidente(id: number, estado: string) {
-    this.http.put(`https://parcial-12d26.onrender.com//incidentes/${id}/estado`, { estado }).subscribe({
+    this.http.put(`https://parcial-1-produccion.onrender.com/incidentes/${id}/estado`, { estado }).subscribe({
       next: () => {
         this.mensaje = `Incidente actualizado a: ${estado}`;
         this.estadoPorIncidente[id] = '';

@@ -1,4 +1,4 @@
-const API_URL = "https://parcial-12d26.onrender.com/";
+const API_URL = "https://parcial-1-produccion.onrender.com";
 
 const loginView = document.getElementById("login-view");
 const appView = document.getElementById("app-view");
