@@ -1,0 +1,6 @@
+{
+  "outputDirectory": "frontend-angular/dist/frontend-angular",
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
