@@ -117,7 +117,7 @@ iaPrioridad = '';
   }
 
   esAdministrador(): boolean {
-    return this.rolNormalizado() === 'administrador';
+    return this.rolNormalizado() === 'admin' || this.rolNormalizado() === 'administrador';
   }
 
   puedeVerVehiculos(): boolean {
