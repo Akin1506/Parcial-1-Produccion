@@ -726,7 +726,7 @@ crearIncidenteDesdeIA() {
 eliminarTecnico(id: number) {
   if (!confirm('¿Seguro que quieres eliminar este técnico?')) return;
 
-  this.http.delete(`http://localhost:8000/tecnicos/${id}`)
+  this.http.delete(`https://parcial-1-produccion.onrender.com/tecnicos/${id}`)
     .subscribe({
       next: () => {
         this.mostrarToast('Técnico eliminado', 'success');

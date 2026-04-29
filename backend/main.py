@@ -857,6 +857,7 @@ def eliminar_tecnico(id: int):
     cur = conn.cursor()
 
     try:
+        # Desasignamos el técnico de cualquier incidente en el que esté asignado
         cur.execute(
             """
             UPDATE solicitud_emergencia
@@ -866,6 +867,7 @@ def eliminar_tecnico(id: int):
             (id,)
         )
 
+        # Ahora sí eliminamos el técnico
         cur.execute(
             """
             DELETE FROM tecnico
